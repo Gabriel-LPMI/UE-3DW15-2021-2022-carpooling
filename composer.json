@@ -1,0 +1,15 @@
+{
+    "name": "uedw15/carpooling",
+    "autoload": {
+        "psr-4": {
+            "UeDw15\\Carpooling\\": "class/"
+        }
+    },
+    "authors": [{
+        "name": "alhmidi",
+        "email": "abdulsatar.alhmidi@gmail.com"
+    }],
+    "require": {
+        "twig/twig": "2.0"
+    }
+}
