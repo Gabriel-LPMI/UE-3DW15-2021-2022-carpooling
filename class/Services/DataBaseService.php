@@ -178,6 +178,7 @@ class DataBaseService
             'color' => $color,
             'nbrSlots' => $nbrSlots,
         ];
+
         $sql = 'INSERT INTO cars (brand, model, color, nbrSlots) VALUES (:brand, :model, :color, :nbrSlots )';
         $query = $this->connection->prepare($sql);
         $isOk = $query->execute($data);
@@ -202,6 +203,7 @@ class DataBaseService
             'color' => $color,
             'nbrSlots' => $nbrSlots,
         ];
+
         $sql = 'UPDATE cars SET brand = :brand, model = :model, color = :color, nbrSlots = :nbrSlots WHERE id_car  = :id;';
         $query = $this->connection->prepare($sql);
 
