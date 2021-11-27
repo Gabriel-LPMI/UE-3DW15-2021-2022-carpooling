@@ -6,9 +6,7 @@ use App\Services\CarsService;
 
 class CarsController
 {   
-    /**
-     * Create Car 
-     */
+    
      
     public function createCar(): string
     {
@@ -74,27 +72,21 @@ class CarsController
     /**
      * Return the html for the read action.
      */
-    public function getCars(): string
+    public function getCars(): array
     {
-        $html = '';
+        $html = [];
 
         // Get all cars :
         $carsService = new CarsService();
         $cars = $carsService->getCars();
 
         // Get html :
-        foreach ($cars as $car) {
-            $carsHtml = '';
-           
-               
-                    $carsHtml .= $car->getBrand() . ' ' . $car->getModel() . ' ' . $car->getColor() . ' '. $car->getnbrSlots();
-            $html .=
-                '#' . $car->getId() . ' ' .
-                $car->getBrand() . ' ' .
-                $car->getModel()  . ' ' .
-                $car->getColor()  . ' ' .
-                $car->getnbrSlots() . ' ' .
-                $carsHtml . '<br />';
+        foreach ($cars as $car) { 
+                array_push($html , array(
+                    'brand' =>   $car->getBrand(),
+                    'model' =>   $car->getModel(),
+                    'color' =>   $car->getColor(),
+                    'nbrSlots' =>   $car->getnbrSlots() ));
         }
 
         return $html;
