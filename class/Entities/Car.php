@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Entities;
 
@@ -70,8 +70,9 @@ class Car
 
         return $this;
     }
+
     /**
-     * Get the value of id_uesr
+     * Get the value of id_uesr.
      */
     public function getIdUesr()
     {
@@ -79,9 +80,9 @@ class Car
     }
 
     /**
-     * Set the value of id_uesr
+     * Set the value of id_uesr.
      *
-     * @return  self
+     * @return self
      */
     public function setIdUesr($id_uesr)
     {

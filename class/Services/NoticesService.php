@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Entities\Notice;
 use App\Entities\User;
 use DateTime;

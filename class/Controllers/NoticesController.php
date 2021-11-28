@@ -56,13 +56,13 @@ class NoticesController
                 $user = $notice->getCreator();
                 $userHtml .= 'Créé par : ' . $user->getFirstname() . ' ' . $user->getLastname();
             }
-            
-                array_push($html , array(
-                    'StratCity' =>   $notice->getStartCity(),
-                    'EndCit' =>   $notice->getEndCity(),
-                    'UserCreator' =>   $notice->getUserCreator(),
-                    'uesrIfo'=> $userHtml,
-                    'text'=> $notice->getText() ));
+
+            \array_push($html, [
+                'StratCity' => $notice->getStartCity(),
+                'EndCit' => $notice->getEndCity(),
+                'UserCreator' => $notice->getUserCreator(),
+                'uesrIfo' => $userHtml,
+                'text' => $notice->getText(), ]);
         }
 
         return $html;

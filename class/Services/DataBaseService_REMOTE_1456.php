@@ -8,11 +8,11 @@ use PDO;
 
 class DataBaseService
 {
-    private const HOST = '127.0.0.1';
-    private const PORT = '3306';
-    private const DATABASE_NAME = 'carpooling';
-    private const MYSQL_USER = 'root';
-    private const MYSQL_PASSWORD = 'password';
+    public const HOST = '127.0.0.1';
+    public const PORT = '3306';
+    public const DATABASE_NAME = 'carpooling';
+    public const MYSQL_USER = 'root';
+    public const MYSQL_PASSWORD = 'password';
 
     private $connection;
 
@@ -84,7 +84,7 @@ class DataBaseService
             'email' => $email,
             'birthday' => $birthday->format(DateTime::RFC3339),
         ];
-        $sql = 'UPDATE users SET firstname = :firstname, lastname = :lastname, email = :email, birthday = :birthday WHERE id_user  = :id;';
+        $sql = 'UPDATE users SET firstname = :firstname, lastname = :lastname, email = :email, birthday = :birthday WHERE id = :id;';
         $query = $this->connection->prepare($sql);
 
         return $query->execute($data);
@@ -100,7 +100,7 @@ class DataBaseService
         $data = [
             'id' => $id,
         ];
-        $sql = 'DELETE FROM users WHERE id_user  = :id;';
+        $sql = 'DELETE FROM users WHERE id = :id;';
         $query = $this->connection->prepare($sql);
 
         return $query->execute($data);
@@ -134,6 +134,7 @@ class DataBaseService
             'userId' => $userId,
             'carId' => $carId,
         ];
+
         $sql = 'INSERT INTO users_cars (user_id, car_id) VALUES (:userId, :carId)';
         $query = $this->connection->prepare($sql);
 
@@ -153,7 +154,7 @@ class DataBaseService
         $sql = '
             SELECT c.*
             FROM cars as c
-            LEFT JOIN users_cars as uc ON uc.car_id = c.id
+            LEFT JOIN users_cars as uc ON uc.car_id = c.id_car
             WHERE uc.user_id = :userId';
         $query = $this->connection->prepare($sql);
         $query->execute($data);
@@ -163,65 +164,6 @@ class DataBaseService
         }
 
         return $userCars;
-    }
-
-    /**
-     * Create a car.
-     */
-    public function setCar(string $brand, string $model, string $color, int $nbrSlots): string
-    {
-        $carId = '';
-
-        $data = [
-            'brand' => $brand,
-            'model' => $model,
-            'color' => $color,
-            'nbrSlots' => $nbrSlots,
-        ];
-        $sql = 'INSERT INTO cars (brand, model, color, nbrSlots) VALUES (:brand, :model, :color, :nbrSlots )';
-        $query = $this->connection->prepare($sql);
-        $isOk = $query->execute($data);
-        if ($isOk) {
-            $carId = $this->connection->lastInsertId();
-        }
-
-        return $carId;
-    }
-
-    /**
-     * Update a car.
-     */
-    public function updateCar(string $id, string $brand, string $model, string $color, int $nbrSlots): bool
-    {
-        $isOk = false;
-
-        $data = [
-            'id' => $id,
-            'brand' => $brand,
-            'model' => $model,
-            'color' => $color,
-            'nbrSlots' => $nbrSlots,
-        ];
-        $sql = 'UPDATE cars SET brand = :brand, model = :model, color = :color, nbrSlots = :nbrSlots WHERE id_car  = :id;';
-        $query = $this->connection->prepare($sql);
-
-        return $query->execute($data);
-    }
-
-    /**
-     * Delete an car.
-     */
-    public function deleteCar(string $id): bool
-    {
-        $isOk = false;
-
-        $data = [
-            'id_car' => $id,
-        ];
-        $sql = 'DELETE FROM cars WHERE id_car  = :id_car;';
-        $query = $this->connection->prepare($sql);
-
-        return $query->execute($data);
     }
 
     /**
@@ -244,15 +186,16 @@ class DataBaseService
     /**
      * Create a booking.
      */
-    public function createBooking(DateTime $start_day, string $notice_id): string
+    public function createBooking(DateTime $start_day, string $notice_id, string $user_pax_id): string
     {
         $bookingId = '';
 
         $data = [
             'start_day' => $start_day->format(DateTime::RFC3339),
             'notice_id' => $notice_id,
+            'user_pax_id' => $user_pax_id,
         ];
-        $sql = 'INSERT INTO bookings (start_day, notice_id) VALUES (:start_day, :notice_id)';
+        $sql = 'INSERT INTO bookings (start_day, notice_id, user_pax_id) VALUES (:start_day, :notice_id, :user_pax_id)';
         $query = $this->connection->prepare($sql);
         $isOk = $query->execute($data);
         if ($isOk) {
@@ -265,42 +208,20 @@ class DataBaseService
     /**
      * Create a booking.
      */
-    public function updateBooking(string $id, DateTime $start_day, string $notice_id, array $users): bool
+    public function updateBooking(string $id, DateTime $start_day, string $notice_id, string $user_pax_id): bool
     {
-        $isOk1 = false;
-        $isOk2 = false;
+        $isOk = false;
 
-        //update the booking
         $data = [
             'id_booking' => $id,
             'start_day' => $start_day->format(DateTime::RFC3339),
             'notice_id' => $notice_id,
+            'user_pax_id' => $user_pax_id,
         ];
-        $sql = 'UPDATE bookings SET start_day = :start_day, notice_id = :notice_id WHERE id_booking = :id_booking;';
+        $sql = 'UPDATE bookings SET start_day = :start_day, notice_id = :notice_id, user_pax_id = :user_pax_id WHERE id_booking = :id;';
         $query = $this->connection->prepare($sql);
-        $isOk1 = $query->execute($data);
 
-        //delete booking users relation
-        $data = [
-            'id_booking' => $id,
-        ];
-        $sql = 'DELETE FROM users_bookings WHERE booking_id = :id_booking;';
-        $query = $this->connection->prepare($sql);
-        $isOk2 = $query->execute($data);
-
-        //update booking users relation
-        foreach ($users as $user) {
-            //if error
-            if (!($this->setBookingUser($user, $id))) {
-                return false;
-            }
-        }
-
-        if ($isOk1 == $isOk2) {
-            return true;
-        }
-
-        return false;
+        return $query->execute($data);
     }
 
     /**
@@ -313,7 +234,7 @@ class DataBaseService
         $data = [
             'id' => $id,
         ];
-        $sql = 'DELETE FROM bookings WHERE id_booking = :id; DELETE FROM users_bookings WHERE booking_id = :id;';
+        $sql = 'DELETE FROM bookings WHERE id_booking = :id;';
         $query = $this->connection->prepare($sql);
 
         return $query->execute($data);
@@ -433,46 +354,5 @@ class DataBaseService
         $query = $this->connection->prepare($sql);
 
         return $query->execute($data);
-    }
-
-    /**
-     * Create relation bewteen a booking and its pax user.
-     */
-    public function setBookingUser(string $userId, string $bookingId): bool
-    {
-        $data = [
-            'userId' => $userId,
-            'bookingId' => $bookingId,
-        ];
-
-        $sql = 'INSERT INTO users_bookings (booking_id, user_id) VALUES (:bookingId, :userId)';
-        $query = $this->connection->prepare($sql);
-
-        return $query->execute($data);
-    }
-
-    /**
-     * Get passenger of given booking id.
-     */
-    public function getBookingPax(string $bookingId): array
-    {
-        $bookingPax = [];
-
-        $data = [
-            'booking_id' => $bookingId,
-        ];
-        $sql = '
-            SELECT u.*
-            FROM users as u
-            LEFT JOIN users_bookings as ub ON ub.user_id = u.id_user
-            WHERE ub.booking_id = :booking_id';
-        $query = $this->connection->prepare($sql);
-        $query->execute($data);
-        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-        if (!empty($results)) {
-            $bookingPax = $results;
-        }
-
-        return $bookingPax;
     }
 }

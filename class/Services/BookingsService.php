@@ -137,7 +137,7 @@ class BookingsService
                 $user->setFirstname($userDTO['firstname']);
                 $user->setLastname($userDTO['lastname']);
                 $user->setEmail($userDTO['email']);
-                ;
+
                 $date = new DateTime($userDTO['birthday']);
                 if ($date !== false) {
                     $user->setBirthday($date);

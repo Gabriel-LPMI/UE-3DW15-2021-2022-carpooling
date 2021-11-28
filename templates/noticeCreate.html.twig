@@ -4,7 +4,7 @@
 <div class="form-container">
     <form method="post" action="create_notice.php" name="userCreateForm">
         <div class=" form-group ">
-            <label for="text">Déscription :</label>
+            <label for="text">Description :</label>
             <input type="text" name="text" class="form-control">
         </div>
         <div class=" form-group ">
@@ -20,6 +20,6 @@
             </br>{% for i in 0..userName|length-1 %}
             <input class="box-bth" type="radio" name="user_creator_id" value="{{ userId[i] }}">{{ userName[i] }} {% endfor %}
         </div>
-        <button type="submit " class="btn btn-primary ">valider</button>
+        <button type="submit " class="btn btn-primary ">Valider</button>
     </form>
 </div> {% endblock %}

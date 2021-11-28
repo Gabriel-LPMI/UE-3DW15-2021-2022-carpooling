@@ -60,10 +60,10 @@ class BookingsController
             $noticeHtml = 'Annonce N° : ';
             if (!empty($booking->getNotice())) {
                 $notice = $booking->getNotice();
-                $noticeHtml .= $notice->getId().
-                '   Note :  ' . $notice->getText().
-                '   Départ de : ' . $notice->getStartCity().
-                '   Arrivée à : ' . $notice->getEndCity().
+                $noticeHtml .= $notice->getId() .
+                '   Note :  ' . $notice->getText() .
+                '   Départ de : ' . $notice->getStartCity() .
+                '   Arrivée à : ' . $notice->getEndCity() .
                 '   Conducteur : ' . $notice->getCreator()->getFirstname() . ' ' . $notice->getCreator()->getLastname();
             }
             $passangersHtml = ' Passagers : ';
@@ -72,11 +72,11 @@ class BookingsController
                     $passangersHtml .= $user->getFirstname() . ' ' . $user->getLastname() . ',';
                 }
             }
-             array_push($html , array(
+            \array_push($html, [
                 'id_booking' => $booking->getId(),
-                'dp_booking'=> $booking->getStartDay()->format('d-m-Y'),
-               'ar_booking'=> $noticeHtml,
-               'passangers'=> $passangersHtml ));
+                'dp_booking' => $booking->getStartDay()->format('d-m-Y'),
+                'ar_booking' => $noticeHtml,
+                'passangers' => $passangersHtml, ]);
         }
 
         return $html;

@@ -8,7 +8,7 @@
             <input type="text" name="id_notice" class="form-control">
         </div>
         <div class=" form-group ">
-            <label for="text">Déscription :</label>
+            <label for="text">Description :</label>
             <input type="text" name="text" class="form-control">
         </div>
         <div class=" form-group ">
@@ -24,6 +24,6 @@
             </br>{% for i in 0..userName|length-1 %}
             <input class="box-bth" type="radio" name="user_creator_id" value="{{ userId[i] }}">{{ userName[i] }} {% endfor %}
         </div>
-        <button type="submit " class="btn btn-primary ">Modifier la réservation</button>
+        <button type="submit " class="btn btn-primary ">Modifier l'annonce'</button>
     </form>
 </div> {% endblock %}

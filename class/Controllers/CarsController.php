@@ -1,22 +1,21 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Controllers;
 
 use App\Services\CarsService;
 
 class CarsController
-{   
+{
     /**
      * add a car .
      */
     public function createCar(): string
     {
         $html = '';
-        if (isset($_POST['brand']) &&
-            isset($_POST['model']) &&
-            isset($_POST['color']) &&
-            isset($_POST['nbrSlots']) )
-            {
+        if (isset($_POST['brand'])
+            && isset($_POST['model'])
+            && isset($_POST['color'])
+            && isset($_POST['nbrSlots'])) {
                 // Create the user :
                 $carsService = new CarsService();
                 $carsid = $carsService->setCar(
@@ -26,13 +25,12 @@ class CarsController
                     $_POST['color'],
                     $_POST['nbrSlots']
                 );
+                if (isset($carsid)) {
+                    $html = 'La voiture a été créée avec succès.';
+                } else {
+                    $html = 'Erreur lors de la création de la voiture.';
+                }
             }
-            if (isset($carsid) ) {
-                $html = 'La voiture été créé avec succès.';
-            } else {
-                $html = 'Erreur lors de la création de la voiture .';
-            }
-        
 
         return $html;
     }
@@ -45,15 +43,14 @@ class CarsController
         $html = '';
 
         // If the form have been submitted :
-        if (isset($_POST['id']) &&
-           isset($_POST['brand']) &&
-            isset($_POST['model']) &&
-            isset($_POST['color']) &&
-            isset($_POST['nbrSlots']) )
-            {
+        if (isset($_POST['id'])
+            && isset($_POST['brand'])
+            && isset($_POST['model'])
+            && isset($_POST['color'])
+            && isset($_POST['nbrSlots'])) {
             // Update the car :
             $carService = new CarsService();
-            $isOk = $carService ->setCar(
+            $isOk = $carService->setCar(
                 $_POST['id'],
                 $_POST['brand'],
                 $_POST['model'],
@@ -61,7 +58,7 @@ class CarsController
                 $_POST['nbrSlots']
             );
             if ($isOk) {
-                $html = 'la viture mis à jour avec succès.';
+                $html = 'La voiture a été mise à jour avec succès.';
             } else {
                 $html = 'Erreur lors de la mise à jour de la voiture.';
             }
@@ -82,12 +79,12 @@ class CarsController
         $cars = $carsService->getCars();
 
         // Get html :
-        foreach ($cars as $car) { 
-                array_push($html , array(
-                    'brand' =>   $car->getBrand(),
-                    'model' =>   $car->getModel(),
-                    'color' =>   $car->getColor(),
-                    'nbrSlots' =>   $car->getnbrSlots() ));
+        foreach ($cars as $car) {
+            \array_push($html, [
+                'brand' => $car->getBrand(),
+                'model' => $car->getModel(),
+                'color' => $car->getColor(),
+                'nbrSlots' => $car->getnbrSlots(), ]);
         }
 
         return $html;
@@ -106,13 +103,12 @@ class CarsController
             $carsService = new CarsService();
             $isOk = $carsService->deletecar($_POST['id_car']);
             if ($isOk) {
-                $html = 'Voiture supprimé avec succès.';
+                $html = 'Voiture supprimée avec succès.';
             } else {
-                $html = 'Erreur lors de la supression de la voiture.';
+                $html = 'Erreur lors de la suppression de la voiture.';
             }
         }
 
         return $html;
     }
-    
 }

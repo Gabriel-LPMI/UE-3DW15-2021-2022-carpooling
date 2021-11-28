@@ -8,11 +8,11 @@ use PDO;
 
 class DataBaseService
 {
-    private const HOST = '127.0.0.1';
-    private const PORT = '3306';
-    private const DATABASE_NAME = 'carpooling';
-    private const MYSQL_USER = 'root';
-    private const MYSQL_PASSWORD = 'password';
+    public const HOST = '127.0.0.1';
+    public const PORT = '3306';
+    public const DATABASE_NAME = 'carpooling';
+    public const MYSQL_USER = 'root';
+    public const MYSQL_PASSWORD = 'password';
 
     private $connection;
 
@@ -84,7 +84,7 @@ class DataBaseService
             'email' => $email,
             'birthday' => $birthday->format(DateTime::RFC3339),
         ];
-        $sql = 'UPDATE users SET firstname = :firstname, lastname = :lastname, email = :email, birthday = :birthday WHERE id_user  = :id;';
+        $sql = 'UPDATE users SET firstname = :firstname, lastname = :lastname, email = :email, birthday = :birthday WHERE id = :id;';
         $query = $this->connection->prepare($sql);
 
         return $query->execute($data);
@@ -100,7 +100,7 @@ class DataBaseService
         $data = [
             'id' => $id,
         ];
-        $sql = 'DELETE FROM users WHERE id_user  = :id;';
+        $sql = 'DELETE FROM users WHERE id = :id;';
         $query = $this->connection->prepare($sql);
 
         return $query->execute($data);
@@ -135,90 +135,6 @@ class DataBaseService
             'carId' => $carId,
         ];
         $sql = 'INSERT INTO users_cars (user_id, car_id) VALUES (:userId, :carId)';
-        $query = $this->connection->prepare($sql);
-
-        return $query->execute($data);
-    }
-
-    /**
-     * Get cars of given user id.
-     */
-    public function getUserCars(string $userId): array
-    {
-        $userCars = [];
-
-        $data = [
-            'userId' => $userId,
-        ];
-        $sql = '
-            SELECT c.*
-            FROM cars as c
-            LEFT JOIN users_cars as uc ON uc.car_id = c.id
-            WHERE uc.user_id = :userId';
-        $query = $this->connection->prepare($sql);
-        $query->execute($data);
-        $results = $query->fetchAll(PDO::FETCH_ASSOC);
-        if (!empty($results)) {
-            $userCars = $results;
-        }
-
-        return $userCars;
-    }
-
-    /**
-     * Create a car.
-     */
-    public function setCar(string $brand, string $model, string $color, int $nbrSlots): string
-    {
-        $carId = '';
-
-        $data = [
-            'brand' => $brand,
-            'model' => $model,
-            'color' => $color,
-            'nbrSlots' => $nbrSlots,
-        ];
-        $sql = 'INSERT INTO cars (brand, model, color, nbrSlots) VALUES (:brand, :model, :color, :nbrSlots )';
-        $query = $this->connection->prepare($sql);
-        $isOk = $query->execute($data);
-        if ($isOk) {
-            $carId = $this->connection->lastInsertId();
-        }
-
-        return $carId;
-    }
-
-    /**
-     * Update a car.
-     */
-    public function updateCar(string $id, string $brand, string $model, string $color, int $nbrSlots): bool
-    {
-        $isOk = false;
-
-        $data = [
-            'id' => $id,
-            'brand' => $brand,
-            'model' => $model,
-            'color' => $color,
-            'nbrSlots' => $nbrSlots,
-        ];
-        $sql = 'UPDATE cars SET brand = :brand, model = :model, color = :color, nbrSlots = :nbrSlots WHERE id_car  = :id;';
-        $query = $this->connection->prepare($sql);
-
-        return $query->execute($data);
-    }
-
-    /**
-     * Delete an car.
-     */
-    public function deleteCar(string $id): bool
-    {
-        $isOk = false;
-
-        $data = [
-            'id_car' => $id,
-        ];
-        $sql = 'DELETE FROM cars WHERE id_car  = :id_car;';
         $query = $this->connection->prepare($sql);
 
         return $query->execute($data);
@@ -474,5 +390,89 @@ class DataBaseService
         }
 
         return $bookingPax;
+    }
+
+    /**
+     * Get cars of given user id.
+     */
+    public function getUserCars(string $userId): array
+    {
+        $userCars = [];
+
+        $data = [
+            'userId' => $userId,
+        ];
+        $sql = '
+            SELECT c.*
+            FROM cars as c
+            LEFT JOIN users_cars as uc ON uc.car_id = c.id
+            WHERE uc.user_id = :userId';
+        $query = $this->connection->prepare($sql);
+        $query->execute($data);
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($results)) {
+            $userCars = $results;
+        }
+
+        return $userCars;
+    }
+
+    /**
+     * Creat a car.
+     */
+    public function setCar(string $brand, string $model, string $color, int $nbrSlots): string
+    {
+        $carId = '';
+
+        $data = [
+            'brand' => $brand,
+            'model' => $model,
+            'color' => $color,
+            'nbrSlots' => $nbrSlots,
+        ];
+        $sql = 'INSERT INTO cars (brand, model, color, nbrSlots) VALUES (:brand, :model, :color, :nbrSlots)';
+        $query = $this->connection->prepare($sql);
+        $isOk = $query->execute($data);
+        if ($isOk) {
+            $carId = $this->connection->lastInsertId();
+        }
+
+        return $carId;
+    }
+
+    /**
+     * Update a car.
+     */
+    public function updateCar(string $id, string $brand, string $model, string $color, int $nbrSlots): bool
+    {
+        $isOk = false;
+
+        $data = [
+            'id' => $id,
+            'brand' => $brand,
+            'model' => $model,
+            'color' => $color,
+            'nbrSlots' => $nbrSlots,
+        ];
+        $sql = 'UPDATE cars SET brand = :brand, model = :model, color = :color, nbrSlots = :nbrSlots WHERE id = :id;';
+        $query = $this->connection->prepare($sql);
+
+        return $query->execute($data);
+    }
+
+    /**
+     * Delete an car.
+     */
+    public function deleteCar(string $id): bool
+    {
+        $isOk = false;
+
+        $data = [
+            'id' => $id,
+        ];
+        $sql = 'DELETE FROM cars WHERE id = :id;';
+        $query = $this->connection->prepare($sql);
+
+        return $query->execute($data);
     }
 }

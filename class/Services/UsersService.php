@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Services;
 
@@ -56,7 +56,7 @@ class UsersService
                 $users[] = $user;
             }
         }
-        
+
         return $users;
     }
 
@@ -68,9 +68,8 @@ class UsersService
         $isOk = false;
 
         $dataBaseService = new DataBaseService();
-        $isOk = $dataBaseService->deleteUser($id);
 
-        return $isOk;
+        return $dataBaseService->deleteUser($id);
     }
 
     /**
@@ -81,9 +80,8 @@ class UsersService
         $isOk = false;
 
         $dataBaseService = new DataBaseService();
-        $isOk = $dataBaseService->setUserCar($userId, $carId);
 
-        return $isOk;
+        return $dataBaseService->setUserCar($userId, $carId);
     }
 
     /**

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Controllers;
 
@@ -6,7 +6,6 @@ use App\Services\UsersService;
 
 class UsersController
 {
-    
     /**
      * Return the html for the create action.
      */
@@ -15,11 +14,11 @@ class UsersController
         $html = '';
 
         // If the form have been submitted :
-        if (isset($_POST['firstname']) &&
-            isset($_POST['lastname']) &&
-            isset($_POST['email']) &&
-            isset($_POST['birthday']) &&
-            isset($_POST['cars'])) {
+        if (isset($_POST['firstname'])
+            && isset($_POST['lastname'])
+            && isset($_POST['email'])
+            && isset($_POST['birthday'])
+            && isset($_POST['cars'])) {
             // Create the user :
             $usersService = new UsersService();
             $userId = $usersService->setUser(
@@ -67,18 +66,16 @@ class UsersController
                 }
             }
 
-            
-
-            array_push($html , array(
-              'id' =>   $user->getId(),
-              'name' =>   $user->getFirstname(),
-              'lastname' =>   $user->getLastname(),
-              'mail' =>   $user->getEmail(),
-              'birth' =>  $user->getBirthday()->format('d-m-Y'),
-              'cars' =>   $carsHtml));
+            \array_push($html, [
+                'id' => $user->getId(),
+                'name' => $user->getFirstname(),
+                'lastname' => $user->getLastname(),
+                'mail' => $user->getEmail(),
+                'birth' => $user->getBirthday()->format('d-m-Y'),
+                'cars' => $carsHtml, ]);
         }
 
-        return $html ;
+        return $html;
     }
 
     /**
@@ -89,11 +86,11 @@ class UsersController
         $html = '';
 
         // If the form have been submitted :
-        if (isset($_POST['id']) &&
-            isset($_POST['firstname']) &&
-            isset($_POST['lastname']) &&
-            isset($_POST['email']) &&
-            isset($_POST['birthday'])) {
+        if (isset($_POST['id'])
+            && isset($_POST['firstname'])
+            && isset($_POST['lastname'])
+            && isset($_POST['email'])
+            && isset($_POST['birthday'])) {
             // Update the user :
             $usersService = new UsersService();
             $isOk = $usersService->setUser(

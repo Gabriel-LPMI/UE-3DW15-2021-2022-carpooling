@@ -18,8 +18,8 @@
             <input type="text " class="form-control " name="lastname" id="lastname " placeholder="Votre nom ">
         </div>
         <div class="form-group">
-            <label for="exampleInputEmail1 ">Email address</label>
-            <input type="email" class="form-control " name="email" id="exampleInputEmail1 " aria-describedby="emailHelp " placeholder="Enter email ">
+            <label for="exampleInputEmail1 ">Adresse email</label>
+            <input type="email" class="form-control " name="email" id="exampleInputEmail1 " aria-describedby="emailHelp " placeholder="Saisir l'email">
         </div>
         <div class="form-group">
             <label for="birthday">Date d'anniversaire au format dd-mm-yyyy :</label>
@@ -27,9 +27,9 @@
         </div>{% for items in carName.id %}
         <li> {{ items.name}}</li> {{ items.id}} {% endfor %}
         <div class="form-group">
-            <label for="birthday">Date d'anniversaire au format dd-mm-yyyy :</label>
+            <label for="birthday">Voiture(s) possédée(s):</label>
             </br>{% for i in 0..carName|length-1 %} <input class="box-bth" type="checkbox" name="cars[]" value="{{ carId[i] }}">{{ carName[i] }} {% endfor %}
         </div>
-        <button type="submit " class="btn btn-primary ">valider</button>
+        <button type="submit " class="btn btn-primary ">Valider</button>
     </form>
 </div> {% endblock %}

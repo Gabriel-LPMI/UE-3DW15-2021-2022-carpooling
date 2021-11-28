@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Services;
 
@@ -22,7 +22,7 @@ class CarsService
                 $car->setBrand($carDTO['brand']);
                 $car->setModel($carDTO['model']);
                 $car->setColor($carDTO['color']);
-                $car->setNbrSlots($carDTO['nbrSlots']);
+                $car->setNbrSlots((int) $carDTO['nbrSlots']);
                 $cars[] = $car;
             }
         }
@@ -33,30 +33,28 @@ class CarsService
     /**
      * Create or update a cars.
      */
-    public function setCar(?string $id, string $brand, string $model, string $color, int $nbrSlots): string
+    public function setCar(?string $id, string $brand, string $model, string $color, string $nbrSlots): string
     {
         $carId = '';
 
         $dataBaseService = new DataBaseService();
         if (empty($id)) {
-            $carId = $dataBaseService->setCar($brand, $model, $color, $nbrSlots);
+            $carId = $dataBaseService->setCar($brand, $model, $color, (int) $nbrSlots);
         } else {
-            $dataBaseService->updateCar($id, $brand, $model, $color, $nbrSlots);
+            $dataBaseService->updateCar($id, $brand, $model, $color, (int) $nbrSlots);
             $carId = $id;
         }
 
         return $carId;
     }
+
     /**
-     * delet a car service
+     * delet a car service.
      */
     public function deleteCar(string $id): bool
     {
-       
-
         $dataBaseService = new DataBaseService();
-        $isOk = $dataBaseService->deleteCar($id);
 
-        return $isOk;
+        return $dataBaseService->deleteCar($id);
     }
 }
