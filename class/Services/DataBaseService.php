@@ -14,6 +14,7 @@ class DataBaseService
     public const MYSQL_USER = 'root';
     public const MYSQL_PASSWORD = 'password';
 
+
     private $connection;
 
     public function __construct()
@@ -167,6 +168,68 @@ class DataBaseService
     }
 
     /**
+     * Creat a car
+     */
+    
+    public function setCar(string $brand, string $model, string $color, int $nbrSlots): string
+    {
+        $carId = '';
+
+        $data = [
+            'brand' => $brand,
+            'model' => $model,
+            'color' => $color,
+            'nbrSlots' => $nbrSlots,
+        ];
+        $sql = 'INSERT INTO cars (brand, model, color, nbrSlots) VALUES (:brand, :model, :color, :nbrSlots)';
+        $query = $this->connection->prepare($sql);
+        $isOk = $query->execute($data);
+        if ($isOk) {
+            $carId = $this->connection->lastInsertId();
+        }
+
+        return $carId;
+    }
+  
+    /**
+     * Update a car
+     */
+    public function updateCar(string $id, string $brand, string $model, string $color, int $nbrSlots): bool
+    {
+        $isOk = false;
+
+        $data = [
+            'id' => $id,
+            'brand' => $brand,
+            'model' => $model,
+            'color' => $color,
+            'nbrSlots' => $nbrSlots,
+        ];
+        $sql = 'UPDATE cars SET brand = :brand, model = :model, color = :color, nbrSlots = :nbrSlots WHERE id = :id;';
+        $query = $this->connection->prepare($sql);
+        $isOk = $query->execute($data);
+
+        return $isOk;
+    }
+
+    /**
+     * Delete an car.
+     */
+    public function deleteCar(string $id): bool
+    {
+        $isOk = false;
+
+        $data = [
+            'id' => $id,
+        ];
+        $sql = 'DELETE FROM cars WHERE id = :id;';
+        $query = $this->connection->prepare($sql);
+        $isOk = $query->execute($data);
+
+        return $isOk;
+    }
+  
+    /**
      * Return all bookings.
      */
     public function getBookings(): array
@@ -245,7 +308,7 @@ class DataBaseService
         return false;
     }
 
-    /**
+   /**
      * Delete a booking.
      */
     public function deleteBooking(string $id): bool

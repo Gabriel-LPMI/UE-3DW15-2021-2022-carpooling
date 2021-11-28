@@ -6,6 +6,7 @@ use App\Services\UsersService;
 
 class UsersController
 {
+    
     /**
      * Return the html for the create action.
      */
@@ -49,9 +50,9 @@ class UsersController
     /**
      * Return the html for the read action.
      */
-    public function getUsers(): string
+    public function getUsers(): array
     {
-        $html = '';
+        $html = [];
 
         // Get all users :
         $usersService = new UsersService();
@@ -65,16 +66,19 @@ class UsersController
                     $carsHtml .= $car->getBrand() . ' ' . $car->getModel() . ' ' . $car->getColor() . ' ';
                 }
             }
-            $html .=
-                '#' . $user->getId() . ' ' .
-                $user->getFirstname() . ' ' .
-                $user->getLastname() . ' ' .
-                $user->getEmail() . ' ' .
-                $user->getBirthday()->format('d-m-Y') . ' ' .
-                $carsHtml . '<br />';
+
+            
+
+            array_push($html , array(
+              'id' =>   $user->getId(),
+              'name' =>   $user->getFirstname(),
+              'lastname' =>   $user->getLastname(),
+              'mail' =>   $user->getEmail(),
+              'birth' =>  $user->getBirthday()->format('d-m-Y'),
+              'cars' =>   $carsHtml));
         }
 
-        return $html;
+        return $html ;
     }
 
     /**
