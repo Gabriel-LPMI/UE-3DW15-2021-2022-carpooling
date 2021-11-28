@@ -16,21 +16,21 @@ class CarsController
             && isset($_POST['model'])
             && isset($_POST['color'])
             && isset($_POST['nbrSlots'])) {
-                // Create the user :
-                $carsService = new CarsService();
-                $carsid = $carsService->setCar(
-                    null,
-                    $_POST['brand'],
-                    $_POST['model'],
-                    $_POST['color'],
-                    $_POST['nbrSlots']
-                );
-                if (isset($carsid)) {
-                    $html = 'La voiture a été créée avec succès.';
-                } else {
-                    $html = 'Erreur lors de la création de la voiture.';
-                }
+            // Create the user :
+            $carsService = new CarsService();
+            $carsid = $carsService->setCar(
+                null,
+                $_POST['brand'],
+                $_POST['model'],
+                $_POST['color'],
+                $_POST['nbrSlots']
+            );
+            if (isset($carsid)) {
+                $html = 'La voiture a été créée avec succès.';
+            } else {
+                $html = 'Erreur lors de la création de la voiture.';
             }
+        }
 
         return $html;
     }

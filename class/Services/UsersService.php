@@ -56,7 +56,7 @@ class UsersService
                 $users[] = $user;
             }
         }
-        
+
         return $users;
     }
 

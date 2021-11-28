@@ -6,7 +6,6 @@ use App\Services\UsersService;
 
 class UsersController
 {
-    
     /**
      * Return the html for the create action.
      */
@@ -76,7 +75,7 @@ class UsersController
                 'cars' => $carsHtml, ]);
         }
 
-        return $html ;
+        return $html;
     }
 
     /**
