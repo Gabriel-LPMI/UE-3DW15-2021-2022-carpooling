@@ -14,6 +14,7 @@ class DataBaseService
     private const MYSQL_USER = 'root';
     private const MYSQL_PASSWORD = 'password';
 
+
     private $connection;
 
     public function __construct()
@@ -305,7 +306,7 @@ class DataBaseService
         return false;
     }
 
-    /**
+   /**
      * Delete a booking.
      */
     public function deleteBooking(string $id): bool
