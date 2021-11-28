@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\Booking;
 use App\Entities\Notice;
 use App\Entities\User;
 use DateTime;
@@ -95,5 +96,39 @@ class NoticesService
         }
 
         return $user;
+    }
+
+    /**
+     * Return all booking from a notice.
+     */
+    public function getNoticeBookings(string $id): array
+    {
+        $noticeBookings = [];
+
+        $dataBaseService = new DataBaseService();
+        $bookingService = new BookingsService();
+
+        //Get relation between bookings and notice
+        $noticeBookingsDTO = $dataBaseService->getNoticeBookings($id);
+        if (!empty($noticeBookingsDTO)) {
+            foreach ($noticeBookingsDTO as $bookingDTO) {
+                $booking = new Booking();
+                $booking->setId($bookingDTO['id_booking'])
+                    ->setStartDay($bookingDTO['start_day'])
+                    ->setIdNotice($bookingDTO['notice_id'])
+                ;
+                //Set booking's notice
+                $notice = $bookingService->getNotice($bookingDTO['notice_id']);
+                $booking->setNotice($notice);
+
+                //Get every passangers from the booking
+                $pax = $bookingService->getBookingPax($bookingDTO['id_booking']);
+                $booking->setPax($pax);
+
+                $noticeBookings[] = $booking;
+            }
+        }
+
+        return $noticeBookings;
     }
 }

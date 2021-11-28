@@ -477,4 +477,28 @@ class DataBaseService
 
         return $bookingPax;
     }
+
+    /**
+     * Get bookings of given notice id.
+     */
+    public function getNoticeBookings(string $noticeId): array
+    {
+        $noticeBookings = [];
+
+        $data = [
+            'notice_id' => $noticeId,
+        ];
+        $sql = '
+            SELECT b.*
+            FROM bookings as b
+            WHERE notice_id = :notice_id';
+        $query = $this->connection->prepare($sql);
+        $query->execute($data);
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($results)) {
+            $noticeBookings = $results;
+        }
+
+        return $noticeBookings;
+    }
 }
